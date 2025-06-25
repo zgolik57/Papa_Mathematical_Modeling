@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv("npm1_gvr_gamma_output.csv")
+df = pd.read_csv("split_fast_gvr_with_gamma.csv")
 
 #delete null GVRs
 df = df.dropna(subset=["GVR"])

@@ -61,7 +61,10 @@ def generate_compositions():
     return comps
 #^loops thru and stores combinations of wt, h, nf and cf that add to 5
 
-#cache all unique permutations for each composition
+"""cache all unique permutations for each composition 
+by generating list of tags for composition and generating 
+possible order while removing duplicates"""
+
 def generate_permutations(compositions):
     composition_perms = {}
     for wt, h, nf, cf in compositions:

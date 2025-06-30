@@ -30,11 +30,22 @@ def compute_total_gamma(pentamer, gamma_map):
         return 0
 
     min_len = min(len(nfast_idx), len(cfast_idx))
-    cfast_perms = list(itertools.permutations(cfast_idx, min_len))
+    if min_len == 0 or not halo_idx:
+        return 0  #no valid pairs
+
+    #determine which is longer and permute that one
+    if len(nfast_idx) > len(cfast_idx):
+        long_list = nfast_idx
+        short_list = sorted(cfast_idx)
+    else:
+        long_list = cfast_idx
+        short_list = sorted(nfast_idx)
 
     total_gamma_across_perms = 0
-    for c_perm in cfast_perms:
-        pairings = list(zip(nfast_idx[:min_len], c_perm))
+    perm_count = 0
+
+    for subset in itertools.permutations(long_list, min_len):
+        pairings = zip(sorted(short_list), subset)
         gamma_sum = 0
         for nf, cf in pairings:
             midpoint_idx = (nf + cf) / 2 % 5
@@ -45,8 +56,9 @@ def compute_total_gamma(pentamer, gamma_map):
                 dist = np.linalg.norm(np.array(halo_pos) - np.array(midpoint_pos))
                 gamma_sum += assign_gamma(dist, gamma_map)
         total_gamma_across_perms += gamma_sum
+        perm_count += 1
 
-    avg_gamma = total_gamma_across_perms / len(cfast_perms)
+    avg_gamma = total_gamma_across_perms / perm_count if perm_count > 0 else 0
     return avg_gamma
 
 #generate all valid compositions of a pentamer
